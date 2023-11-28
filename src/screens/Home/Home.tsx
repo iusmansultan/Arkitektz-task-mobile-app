@@ -5,6 +5,7 @@ import {
   TextInput,
   FlatList,
   Modal,
+  RefreshControl,
   ActivityIndicator,
 } from 'react-native';
 import React, {useState, useEffect, useCallback} from 'react';
@@ -24,6 +25,7 @@ const Home = () => {
     limit: 15,
     offset: 0,
   });
+  const [refreshing, setRefreshing] = useState(false);
 
   const [search, setSearch] = useState<string>('');
 
@@ -95,6 +97,23 @@ const Home = () => {
       }
     }
   };
+  const onRefresh = async () => {
+    setRefreshing(true);
+
+    try {
+      setPagination({
+        total_count: 0,
+        page: 1,
+        limit: 15,
+        offset: 0,
+      });
+      await fetchData();
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   const onChangeSearchText = (text: string) => {
     setSearch(text);
@@ -129,6 +148,13 @@ const Home = () => {
         onEndReached={() => {
           onReachedEnd();
         }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor="#000" // Change the loading indicator color
+          />
+        }
         style={styles.flatList}
       />
     </SafeAreaView>

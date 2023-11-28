@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   },
   gif: {
     width: '100%',
-    height: hp('15%'),
+    height: hp('17%'),
     borderRadius: 10,
   },
 });
